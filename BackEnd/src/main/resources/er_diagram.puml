@@ -1,0 +1,169 @@
+@startuml
+
+skinparam linetype ortho
+skinparam monochrome true
+skinparam nodesep 50  ' 缩小节点之间的水平间距，使实体更加紧凑
+skinparam ranksep 50  ' 调整垂直间距，确保上下布局紧凑
+skinparam padding 2
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ArrowThickness 1.5  ' 增加箭头厚度，确保线条清晰
+skinparam LineWidth 1.5  ' 增加线条宽度，确保线条清晰
+skinparam backgroundColor white
+
+' 定义实体
+entity "用户 (users)" as users {
+  *user_id: bigint <<PK>>
+  --
+  *email: varchar(255) <<UQ>>
+  *username: varchar(255) <<UQ>>
+  *password: varchar(64)
+  nickname: varchar(255)
+  avatar: varchar(255)
+  *create_time: datetime(6)
+  *tags: varchar(512)
+  *role: int
+  *enabled: boolean
+}
+
+entity "用户评分 (user_rating)" as user_rating {
+  *id: bigint <<PK>>
+  --
+  *user_id: bigint
+  *app_id: bigint
+  *rating: double
+  *timestamp: bigint
+  comment: varchar(1000)
+  *recommended: boolean
+}
+
+entity "用户偏好 (user_preference)" as user_preference {
+  *user_id: bigint <<FK>>
+  *preference_key: varchar(255) <<PK>>
+  --
+  preference_value: double
+}
+
+entity "愿望单 (wishlist_item)" as wishlist {
+  *app_id: bigint <<PK>>
+  *user_id: bigint <<PK>>
+  --
+  sort: int
+  create_time: bigint
+}
+
+entity "好友关系 (friend)" as friend {
+  *friend_id: bigint <<PK>>
+  *user_id: bigint <<PK>>
+  --
+  create_time: bigint
+}
+
+entity "好友邀请 (invitation)" as invitation {
+  *friend_id: bigint <<PK>>
+  *user_id: bigint <<PK>>
+  --
+  create_time: bigint
+}
+
+entity "聊天消息 (chat_message)" as chat {
+  *id: bigint <<PK>>
+  --
+  from_id: bigint
+  to_id: bigint
+  content: varchar(4095)
+  *is_read: boolean
+  create_time: bigint
+}
+
+' 游戏相关的表
+entity "游戏 (app)" as app {
+  *app_id: bigint <<PK>>
+  --
+  name: varchar(255)
+  cover: varchar(255)
+  header: varchar(255)
+  images: varchar(4095)
+  description: varchar(4095)
+  developer: varchar(255)
+  publisher: varchar(255)
+  price: double
+  final_price: double
+  win: boolean
+  mac: boolean
+  linux: boolean
+  create_time: varchar(10)
+  popularity: int
+  average_rating: decimal(3,2)
+  positive_rate: decimal(5,2)
+  review_count: int
+}
+
+entity "游戏标签 (app_tags)" as app_tags {
+  *app_id: bigint <<FK>>
+  --
+  tag: varchar(255)
+}
+
+' 推荐配置和ID生成器（上下放置）
+entity "推荐配置 (recommendation_config)" as config {
+  *id: bigint <<PK>>
+  --
+  *algorithm_version: varchar(255)
+  *collaborative_filtering_weight: double
+  *collaborative_weight: double
+  *content_based_weight: double
+  *content_weight: double
+  *hybrid_weight: double
+  *similarity_threshold: double
+  *create_time: bigint
+}
+
+entity "ID生成器 (id_generator)" as id_generator {
+  *name: varchar(255) <<PK>>
+  --
+  value: bigint
+}
+
+' 布局设置 - 更紧凑的布局
+
+' 推荐配置和ID生成器上下放置
+config -[hidden]down- id_generator
+
+' 用户相关实体布局 - 紧凑排列
+users -[hidden]down- user_rating
+users -[hidden]right- wishlist
+
+' 用户偏好向右移动，确保关系线文字完整显示
+users -[hidden]right- user_preference
+user_preference -[hidden]right- app_tags
+
+' 好友关系相关实体布局 - 靠近用户实体
+users -[hidden]down- friend
+friend -[hidden]down- invitation
+
+' 右侧布局 - 垂直紧凑排列
+user_rating -[hidden]down- wishlist
+wishlist -[hidden]down- chat
+
+' 游戏相关布局 - 水平紧凑排列
+app -[hidden]left- user_rating
+
+' 游戏标签向右移动，确保关系线文字完整显示
+app -[hidden]right- app_tags
+app_tags -[hidden]right- config
+
+' 定义关系，确保线条不重叠和文字清晰
+users ||--o{ user_preference : "用户偏好"
+users |o--o{ user_rating : "用户评分"
+users |o--o{ wishlist : "愿望单"
+
+users |o--o{ friend : "好友关系(用户)"
+users |o--o{ invitation : "好友邀请(用户)"
+users |o--o{ chat : "发送消息"
+
+app ||--o{ app_tags : "游戏标签"
+app |o--o{ user_rating : "游戏评分"
+app |o--o{ wishlist : "愿望单"
+
+@enduml

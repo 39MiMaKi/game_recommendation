@@ -1,0 +1,88 @@
+// 颜色变量
+$steam-bg: #181A21;
+$steam-text: #ffffff;
+$steam-link: #66c0f4;
+$steam-link-hover: #1999ff;
+$steam-border: #2a475e;
+$steam-button: #67c1f5;
+$steam-button-hover: #1999ff;
+$steam-input-bg: #32353c;
+$steam-input-text: #ffffff;
+$steam-error: #cc3d3d;
+$steam-success: #5c7e10;
+
+// 布局变量
+$global-header-height: 104px;
+$global-header-bg-color: #171d25;
+$global-content-width: 940px;
+$global-sidebar-width: 292px;
+
+// 间距变量
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// 字体变量
+$font-family: "Motiva Sans", sans-serif;
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-md: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 24px;
+
+// 圆角变量
+$border-radius-sm: 2px;
+$border-radius-md: 4px;
+$border-radius-lg: 8px;
+
+// 阴影变量
+$shadow-sm: 0 0 4px rgba(0, 0, 0, 0.2);
+$shadow-md: 0 0 8px rgba(0, 0, 0, 0.3);
+$shadow-lg: 0 0 16px rgba(0, 0, 0, 0.4);
+
+// 过渡变量
+$transition-fast: 0.2s ease-in-out;
+$transition-normal: 0.3s ease-in-out;
+$transition-slow: 0.5s ease-in-out;
+
+// 混合器
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin steam-button {
+  background: linear-gradient(to right, #47bfff 0%, #1a44c2 50%, #47bfff 100%);
+  color: $steam-text;
+  border: none;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+  transition: $transition-fast;
+  
+  &:hover {
+    background: linear-gradient(to right, #1999ff 0%, #1a44c2 50%, #1999ff 100%);
+  }
+}
+
+@mixin steam-input {
+  background-color: $steam-input-bg;
+  color: $steam-input-text;
+  border: 1px solid $steam-border;
+  padding: $spacing-sm;
+  border-radius: $border-radius-sm;
+  outline: none;
+  
+  &:focus {
+    border-color: $steam-link;
+  }
+}

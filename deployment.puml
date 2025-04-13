@@ -1,0 +1,32 @@
+@startuml
+!define RECTANGLE class
+
+node "客户端" {
+    RECTANGLE "Web浏览器" as browser {
+        + 加载前端资源
+        + 渲染用户界面
+    }
+}
+
+node "应用服务器" {
+    RECTANGLE "Spring Boot应用" as app {
+        + RESTful API处理
+        + WebSocket通信
+        + 用户认证
+        + 游戏管理
+        + 愿望单功能
+    }
+}
+
+node "数据库服务器" {
+    database "MySQL" as db {
+        + 用户信息
+        + 游戏数据
+        + 交互记录
+    }
+}
+
+browser -down-> app : HTTP/WebSocket
+app -down-> db : JDBC
+
+@enduml
